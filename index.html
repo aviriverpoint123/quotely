@@ -286,6 +286,10 @@
     .pricing-badge { display: inline-block; background: var(--amber); color: var(--white); font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 2px; margin-bottom: 1.25rem; }
     .pricing-name { font-family: 'Cormorant Garamond', serif; font-size: 1.65rem; font-weight: 500; color: var(--charcoal); margin-bottom: 0.4rem; }
     .pricing-col.featured .pricing-name { color: var(--cream); }
+    .pricing-price { font-family: 'Cormorant Garamond', serif; font-size: 2.6rem; font-weight: 600; color: var(--charcoal); line-height: 1; margin-bottom: 0.25rem; letter-spacing: -1px; }
+    .pricing-price em { font-style: italic; font-size: 1.1rem; font-weight: 400; color: var(--charcoal-60); letter-spacing: 0; }
+    .pricing-col.featured .pricing-price { color: var(--cream); }
+    .pricing-col.featured .pricing-price em { color: rgba(245,240,234,0.5); }
     .pricing-tagline { font-size: 0.78rem; color: var(--charcoal-60); margin-bottom: 2rem; line-height: 1.5; }
     .pricing-col.featured .pricing-tagline { color: rgba(245,240,234,0.5); }
     .pricing-rule { width: 100%; height: 1px; background: var(--rule); margin-bottom: 2rem; }
@@ -644,10 +648,35 @@
     <h2 class="section-heading">Simple, <em>transparent</em> fees</h2>
     <p class="section-body" style="margin-top:1rem;">You pay us — not the contractors. That's how we stay independent.</p>
     <div class="pricing-cols">
-      <div class="pricing-col"><div class="pricing-name">Starter</div><div class="pricing-tagline">Ideal for smaller projects</div><div class="pricing-rule"></div><a href="#get-started" class="pricing-btn">Get Started</a></div>
-      <div class="pricing-col"><div class="pricing-name">Professional</div><div class="pricing-tagline">Perfect for renovations</div><div class="pricing-rule"></div><a href="#get-started" class="pricing-btn">Get Started</a></div>
-      <div class="pricing-col featured"><div class="pricing-badge">Most Popular</div><div class="pricing-name">Premium</div><div class="pricing-tagline">Complete procurement &amp; owner representation</div><div class="pricing-rule"></div><a href="#get-started" class="pricing-btn">Get Started</a></div>
-      <div class="pricing-col"><div class="pricing-name">Enterprise</div><div class="pricing-tagline">Builders, developers &amp; investors — multiple projects</div><div class="pricing-rule"></div><a href="#get-started" class="pricing-btn">Contact Us</a></div>
+      <div class="pricing-col">
+        <div class="pricing-name">Starter</div>
+        <div class="pricing-price">$150<em> flat</em></div>
+        <div class="pricing-tagline">Great for smaller projects. We collect 3 quotes and send you a simple comparison.</div>
+        <div class="pricing-rule"></div>
+        <a href="#get-started" class="pricing-btn">Get Started</a>
+      </div>
+      <div class="pricing-col">
+        <div class="pricing-name">Professional</div>
+        <div class="pricing-price">$225<em> flat</em></div>
+        <div class="pricing-tagline">We handle quotes, vetting, and a full side-by-side breakdown for bigger renovations.</div>
+        <div class="pricing-rule"></div>
+        <a href="#get-started" class="pricing-btn">Get Started</a>
+      </div>
+      <div class="pricing-col featured">
+        <div class="pricing-badge">Most Popular</div>
+        <div class="pricing-name">Premium</div>
+        <div class="pricing-price">$325<em> flat</em></div>
+        <div class="pricing-tagline">Everything in Professional plus negotiation, bid analysis, and our full recommendation.</div>
+        <div class="pricing-rule"></div>
+        <a href="#get-started" class="pricing-btn">Get Started</a>
+      </div>
+      <div class="pricing-col">
+        <div class="pricing-name">Enterprise</div>
+        <div class="pricing-price">$375<em>+</em></div>
+        <div class="pricing-tagline">For builders, investors &amp; developers managing multiple projects. Custom pricing available.</div>
+        <div class="pricing-rule"></div>
+        <a href="#get-started" class="pricing-btn">Contact Us</a>
+      </div>
     </div>
   </div>
 </section>
