@@ -7,201 +7,162 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --cream:      #F6F2EC;
-      --cream-dark: #EDE8DF;
-      --parchment:  #E5DED3;
-      --charcoal:   #1C1B19;
-      --charcoal-80: rgba(28,27,25,0.8);
-      --charcoal-60: rgba(28,27,25,0.6);
-      --charcoal-30: rgba(28,27,25,0.3);
-      --charcoal-10: rgba(28,27,25,0.08);
-      --amber:      #D4761A;
-      --amber-light:#F08C30;
-      --amber-pale: #FDF0E3;
-      --sage:       #4E6B52;
-      --white:      #FDFCFA;
-      --rule:       rgba(28,27,25,0.12);
+      --cream: #F6F2EC; --cream-dark: #EDE8DF; --parchment: #E5DED3;
+      --charcoal: #1C1B19; --charcoal-60: rgba(28,27,25,0.6); --charcoal-30: rgba(28,27,25,0.3); --charcoal-10: rgba(28,27,25,0.08);
+      --amber: #D4761A; --amber-light: #F08C30; --amber-pale: #FDF0E3;
+      --sage: #4E6B52; --white: #FDFCFA; --rule: rgba(28,27,25,0.12);
     }
-
     html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; color: var(--charcoal); background: var(--cream); line-height: 1.6; }
+    body { font-family: 'Inter', sans-serif; color: var(--charcoal); background: var(--cream); line-height: 1.6; overflow-x: hidden; }
 
     /* ── NAV ── */
     nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 300;
-      height: 64px; background: var(--charcoal);
-      display: flex; align-items: center; justify-content: space-between; padding: 0 5%;
-      box-shadow: 0 1px 0 rgba(255,255,255,0.06);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 400;
+      height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 5%;
+      transition: background 0.35s, box-shadow 0.35s;
     }
-    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; color: var(--cream); letter-spacing: 0.3px; }
-    .nav-logo em { font-style: italic; color: var(--amber-light); }
+    nav.transparent { background: transparent; }
+    nav.solid { background: var(--charcoal); box-shadow: 0 1px 0 rgba(255,255,255,0.06); }
+    .nav-logo { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+    .nav-logo-icon { width: 28px; height: 28px; }
+    .nav-logo-text { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; color: var(--cream); letter-spacing: 0.3px; }
+    .nav-logo-text em { font-style: italic; color: var(--amber-light); }
     .nav-links { list-style: none; display: flex; align-items: center; gap: 2rem; }
-    .nav-links a { color: rgba(245,240,234,0.6); text-decoration: none; font-size: 0.78rem; font-weight: 400; letter-spacing: 1.2px; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a { color: rgba(245,240,234,0.65); text-decoration: none; font-size: 0.78rem; font-weight: 400; letter-spacing: 1.2px; text-transform: uppercase; transition: color 0.2s; }
     .nav-links a:hover { color: var(--cream); }
     .nav-cta { background: var(--amber) !important; color: var(--white) !important; padding: 0.45rem 1.1rem !important; border-radius: 3px; letter-spacing: 1px !important; }
     .nav-cta:hover { background: var(--amber-light) !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--cream); transition: all 0.25s; border-radius: 2px; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--charcoal); padding: 1.5rem 5%; flex-direction: column; gap: 1.25rem; z-index: 399; border-top: 1px solid rgba(255,255,255,0.06); }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { color: rgba(245,240,234,0.7); text-decoration: none; font-size: 0.88rem; letter-spacing: 1px; text-transform: uppercase; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .mobile-menu .m-cta { color: var(--amber-light) !important; border: none; font-weight: 600; }
+
+    /* ── STICKY BOTTOM BAR ── */
+    .sticky-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 350;
+      background: var(--charcoal); border-top: 2px solid var(--amber);
+      padding: 0.85rem 5%; display: flex; align-items: center; justify-content: space-between;
+      transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+    .sticky-bar.visible { transform: translateY(0); }
+    .sticky-bar-text { font-size: 0.82rem; color: rgba(245,240,234,0.7); }
+    .sticky-bar-text strong { color: var(--amber-light); }
+    .sticky-bar-btn { background: var(--amber); color: var(--white); padding: 0.55rem 1.4rem; border-radius: 3px; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: background 0.2s; white-space: nowrap; }
+    .sticky-bar-btn:hover { background: var(--amber-light); }
 
     /* ── HERO ── */
-    .hero {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-
-    .hero-left {
-      background: var(--cream);
-      padding: 140px 6% 80px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 0.6rem;
-      font-size: 0.7rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
-      color: var(--amber); margin-bottom: 1.75rem;
-    }
+    .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; }
+    .hero-left { background: var(--cream); padding: 140px 6% 80px; display: flex; flex-direction: column; justify-content: center; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 0.6rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); margin-bottom: 1.75rem; }
     .hero-eyebrow::before { content: ''; display: block; width: 28px; height: 2px; background: var(--amber); }
-
-    .hero h1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.6rem, 4.5vw, 4.2rem);
-      font-weight: 600; line-height: 1.08; letter-spacing: -0.5px;
-      color: var(--charcoal); margin-bottom: 1rem;
-    }
+    .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.6rem, 4.5vw, 4.2rem); font-weight: 600; line-height: 1.08; letter-spacing: -0.5px; color: var(--charcoal); margin-bottom: 1rem; }
     .hero h1 em { font-style: italic; color: var(--amber); }
-
-    .hero-tagline {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.35rem; font-style: italic; font-weight: 400;
-      color: var(--charcoal-60); margin-bottom: 1.75rem; line-height: 1.4;
-    }
-
-    .hero-desc {
-      font-size: 0.95rem; line-height: 1.8; color: var(--charcoal-60);
-      font-weight: 300; max-width: 460px; margin-bottom: 2.5rem;
-    }
-
-    .hero-nums {
-      display: flex; gap: 2.5rem; margin-bottom: 2.5rem;
-      padding: 1.75rem 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
-    }
-    .hero-num-item { }
-    .hero-num-val {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.6rem; font-weight: 600; line-height: 1; letter-spacing: -1px;
-      color: var(--charcoal);
-    }
+    .hero-tagline { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-style: italic; font-weight: 400; color: var(--charcoal-60); margin-bottom: 1.75rem; line-height: 1.4; }
+    .hero-desc { font-size: 0.95rem; line-height: 1.8; color: var(--charcoal-60); font-weight: 300; max-width: 460px; margin-bottom: 2.5rem; }
+    .hero-nums { display: flex; gap: 2.5rem; margin-bottom: 2.5rem; padding: 1.75rem 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+    .hero-num-val { font-family: 'Cormorant Garamond', serif; font-size: 2.6rem; font-weight: 600; line-height: 1; letter-spacing: -1px; color: var(--charcoal); }
     .hero-num-val .suffix { font-style: italic; color: var(--amber); }
     .hero-num-label { font-size: 0.7rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--charcoal-60); margin-top: 0.3rem; }
-
     .hero-actions { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
-
-    .btn-primary {
-      background: var(--amber); color: var(--white);
-      padding: 1rem 2.25rem; text-decoration: none;
-      font-size: 0.82rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
-      border-radius: 3px; transition: all 0.2s; display: inline-block; border: none; cursor: pointer;
-    }
-    .btn-primary:hover { background: var(--amber-light); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(212,118,26,0.3); }
-
-    .btn-ghost {
-      color: var(--charcoal-60); text-decoration: none;
-      font-size: 0.78rem; font-weight: 500; letter-spacing: 0.5px;
-      border-bottom: 1px solid var(--charcoal-30); padding-bottom: 2px;
-      transition: color 0.2s, border-color 0.2s;
-    }
-    .btn-ghost:hover { color: var(--charcoal); border-color: var(--charcoal); }
-
-    .hero-right {
-      position: relative; overflow: hidden;
-    }
-    .hero-right img {
-      width: 100%; height: 100%; object-fit: cover; object-position: center;
-      display: block;
-    }
-    .hero-right-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to right, rgba(246,242,236,0.15) 0%, rgba(0,0,0,0.25) 100%);
-    }
-    .hero-badge {
-      position: absolute; bottom: 2.5rem; left: 2.5rem;
-      background: var(--charcoal); color: var(--cream);
-      padding: 1.5rem 2rem; max-width: 260px;
-      border-left: 3px solid var(--amber);
-    }
-    .hero-badge-num {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.8rem; font-weight: 600; line-height: 1; color: var(--white);
-      letter-spacing: -1px;
-    }
+    .hero-right { position: relative; overflow: hidden; }
+    .hero-right img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+    .hero-right-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(246,242,236,0.15) 0%, rgba(0,0,0,0.25) 100%); }
+    .hero-badge { position: absolute; bottom: 2.5rem; left: 2.5rem; background: var(--charcoal); color: var(--cream); padding: 1.5rem 2rem; max-width: 260px; border-left: 3px solid var(--amber); }
+    .hero-badge-num { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; font-weight: 600; line-height: 1; color: var(--white); letter-spacing: -1px; }
     .hero-badge-num em { font-style: italic; color: var(--amber-light); }
     .hero-badge-label { font-size: 0.72rem; color: rgba(245,240,234,0.6); margin-top: 0.4rem; letter-spacing: 0.5px; line-height: 1.5; }
 
+    /* ── BUTTONS ── */
+    .btn-primary { background: var(--amber); color: var(--white); padding: 1rem 2.25rem; text-decoration: none; font-size: 0.82rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; border-radius: 3px; transition: all 0.18s; display: inline-block; border: none; cursor: pointer; position: relative; overflow: hidden; }
+    .btn-primary::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0); transition: background 0.18s; }
+    .btn-primary:hover { background: var(--amber-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,118,26,0.35); }
+    .btn-primary:active { transform: translateY(0); box-shadow: none; }
+    .btn-ghost { color: var(--charcoal-60); text-decoration: none; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.5px; border-bottom: 1px solid var(--charcoal-30); padding-bottom: 2px; transition: color 0.2s, border-color 0.2s; }
+    .btn-ghost:hover { color: var(--charcoal); border-color: var(--charcoal); }
+
     /* ── TRUST BAR ── */
-    .trust-bar {
-      background: var(--charcoal); padding: 2.25rem 5%;
-      display: flex; align-items: center; justify-content: center;
-      gap: 0; flex-wrap: wrap;
-      border-bottom: 3px solid var(--amber);
-    }
-    .trust-item {
-      display: flex; align-items: center; gap: 1rem;
-      padding: 0.5rem 3rem; border-right: 1px solid rgba(255,255,255,0.1);
-    }
+    .trust-bar { background: var(--charcoal); padding: 2.25rem 5%; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; border-bottom: 3px solid var(--amber); }
+    .trust-item { display: flex; align-items: center; gap: 1rem; padding: 0.5rem 3rem; border-right: 1px solid rgba(255,255,255,0.1); }
     .trust-item:last-child { border-right: none; }
     .trust-icon { font-size: 1.4rem; }
-    .trust-text { }
-    .trust-val {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.6rem; font-weight: 600; color: var(--cream); line-height: 1;
-    }
+    .trust-val { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; color: var(--cream); line-height: 1; }
     .trust-val em { font-style: italic; color: var(--amber-light); }
     .trust-label { font-size: 0.68rem; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(245,240,234,0.45); }
+
+    /* ── PRESS ── */
+    .press { background: var(--white); padding: 2.25rem 5%; border-bottom: 1px solid var(--rule); }
+    .press-inner { max-width: 1120px; margin: 0 auto; display: flex; align-items: center; gap: 3rem; flex-wrap: wrap; }
+    .press-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--charcoal-30); white-space: nowrap; }
+    .press-logos { display: flex; align-items: center; gap: 2.5rem; flex-wrap: wrap; }
+    .press-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; color: var(--charcoal-30); letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s; }
+    .press-logo:hover { color: var(--charcoal-60); }
 
     /* ── SECTIONS ── */
     .section { padding: 96px 5%; }
     .section-inner { max-width: 1120px; margin: 0 auto; }
     .section-kicker { font-size: 0.68rem; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--amber); margin-bottom: 0.9rem; }
-    .section-heading {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 500; color: var(--charcoal); line-height: 1.12; letter-spacing: -0.3px;
-    }
+    .section-heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 500; color: var(--charcoal); line-height: 1.12; letter-spacing: -0.3px; }
     .section-heading em { font-style: italic; color: var(--charcoal-60); }
     .section-body { font-size: 0.92rem; color: var(--charcoal-60); line-height: 1.8; font-weight: 300; max-width: 540px; }
 
-    /* ── SAVINGS EXPLAINER ── */
-    .savings-explainer { background: var(--amber-pale); }
-    .savings-explainer-inner {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;
-    }
-    .savings-photo { border-radius: 2px; overflow: hidden; }
-    .savings-photo img { width: 100%; height: 480px; object-fit: cover; display: block; }
-    .savings-breakdown {
-      display: flex; flex-direction: column; gap: 1.5rem;
-    }
-    .savings-row {
-      display: flex; align-items: flex-start; gap: 1.25rem;
-      padding: 1.5rem; background: var(--white); border-left: 3px solid var(--amber);
-    }
-    .savings-row-num {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2rem; font-weight: 600; color: var(--amber); line-height: 1; flex-shrink: 0; min-width: 50px;
-    }
-    .savings-row h4 { font-size: 0.9rem; font-weight: 600; color: var(--charcoal); margin-bottom: 0.3rem; }
-    .savings-row p { font-size: 0.82rem; color: var(--charcoal-60); line-height: 1.6; }
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ── CALCULATOR ── */
+    .calculator { background: var(--charcoal); }
+    .calculator .section-heading { color: var(--cream); }
+    .calculator .section-kicker { color: var(--amber-light); }
+    .calc-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; margin-top: 3rem; }
+    .calc-left p { font-size: 0.9rem; color: rgba(245,240,234,0.55); line-height: 1.8; font-weight: 300; margin-top: 1rem; max-width: 420px; }
+    .calc-widget { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 2.5rem; }
+    .calc-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(245,240,234,0.45); margin-bottom: 0.75rem; }
+    .calc-slider-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+    .calc-slider { flex: 1; -webkit-appearance: none; appearance: none; height: 3px; background: rgba(255,255,255,0.15); border-radius: 2px; outline: none; cursor: pointer; }
+    .calc-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--amber); cursor: pointer; transition: transform 0.15s; }
+    .calc-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+    .calc-slider-val { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; color: var(--cream); min-width: 80px; text-align: right; }
+    .calc-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 1.5rem 0; }
+    .calc-result { display: flex; justify-content: space-between; align-items: flex-end; }
+    .calc-result-label { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(245,240,234,0.4); margin-bottom: 0.5rem; }
+    .calc-result-num { font-family: 'Cormorant Garamond', serif; font-size: 3.2rem; font-weight: 600; color: var(--amber-light); line-height: 1; letter-spacing: -1px; }
+    .calc-result-sub { font-size: 0.72rem; color: rgba(245,240,234,0.3); margin-top: 0.5rem; font-style: italic; }
+    .calc-result-fee { text-align: right; }
+    .calc-result-fee-num { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 500; color: rgba(245,240,234,0.35); line-height: 1; }
+    .calc-roi { margin-top: 1.5rem; padding: 1rem 1.25rem; background: rgba(212,118,26,0.15); border-left: 3px solid var(--amber); }
+    .calc-roi-text { font-size: 0.85rem; color: rgba(245,240,234,0.8); }
+    .calc-roi-text strong { color: var(--amber-light); }
+
+    /* ── BEFORE/AFTER ── */
+    .before-after { background: var(--amber-pale); }
+    .ba-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid rgba(212,118,26,0.2); margin-top: 3.5rem; }
+    .ba-card { padding: 2.5rem 2rem; border-right: 1px solid rgba(212,118,26,0.2); }
+    .ba-card:last-child { border-right: none; }
+    .ba-type { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); margin-bottom: 1.5rem; }
+    .ba-project { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 500; color: var(--charcoal); margin-bottom: 1.5rem; }
+    .ba-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.75rem; font-size: 0.82rem; color: var(--charcoal-60); }
+    .ba-row span:last-child { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 500; color: var(--charcoal); }
+    .ba-row.saved span:last-child { color: var(--sage); font-weight: 600; }
+    .ba-divider { height: 1px; background: rgba(212,118,26,0.2); margin: 1rem 0; }
+    .ba-big { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 600; color: var(--sage); line-height: 1; letter-spacing: -1px; }
+    .ba-big-label { font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; color: var(--charcoal-60); margin-top: 0.3rem; }
 
     /* ── PROBLEM ── */
     .problem { background: var(--cream-dark); }
     .problem-layout { display: grid; grid-template-columns: 1fr 1.6fr; gap: 5rem; align-items: start; }
     .problem-left { position: sticky; top: 100px; }
     .problem-big-stat { margin-top: 2.5rem; padding: 2rem; background: var(--charcoal); }
-    .problem-big-num {
-      font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 600;
-      color: var(--amber-light); line-height: 1; letter-spacing: -2px;
-    }
+    .problem-big-num { font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 600; color: var(--amber-light); line-height: 1; letter-spacing: -2px; }
     .problem-big-label { font-size: 0.78rem; color: rgba(245,240,234,0.6); margin-top: 0.5rem; line-height: 1.6; }
     .problem-big-sub { font-size: 0.7rem; color: rgba(245,240,234,0.35); margin-top: 0.75rem; font-style: italic; }
     .problem-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
@@ -211,52 +172,69 @@
     .problem-card p { font-size: 0.82rem; color: var(--charcoal-60); line-height: 1.65; }
 
     /* ── STEPS ── */
-    .steps-layout {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 0; border: 1px solid var(--rule); margin-top: 4rem;
-    }
+    .steps-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0; border: 1px solid var(--rule); margin-top: 4rem; }
     .step { padding: 2.5rem 2rem; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
     .step:nth-child(3n) { border-right: none; }
     .step-num { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: var(--charcoal-10); line-height: 1; margin-bottom: 1rem; }
     .step h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 500; color: var(--charcoal); margin-bottom: 0.6rem; }
     .step p { font-size: 0.82rem; color: var(--charcoal-60); line-height: 1.7; }
 
-    /* ── VERIFIED DARK ── */
+    /* ── TIMELINE ── */
+    .timeline { background: var(--cream-dark); }
+    .timeline-track { display: flex; margin-top: 3.5rem; border: 1px solid var(--rule); overflow: hidden; }
+    .timeline-step { flex: 1; padding: 2rem 1.5rem; border-right: 1px solid var(--rule); position: relative; }
+    .timeline-step:last-child { border-right: none; }
+    .timeline-step::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--charcoal-10); }
+    .timeline-step.active::before { background: var(--amber); }
+    .timeline-day { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 600; color: var(--charcoal); line-height: 1; margin-bottom: 0.5rem; }
+    .timeline-day em { font-style: italic; color: var(--amber); }
+    .timeline-title { font-size: 0.82rem; font-weight: 600; color: var(--charcoal); margin-bottom: 0.4rem; }
+    .timeline-desc { font-size: 0.78rem; color: var(--charcoal-60); line-height: 1.6; }
+
+    /* ── VERIFIED ── */
     .verified { background: var(--charcoal); }
     .verified .section-heading { color: var(--cream); }
     .verified .section-kicker { color: var(--amber-light); }
     .verify-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.07); margin-top: 3.5rem; }
     .verify-item { background: var(--charcoal); padding: 1.75rem 2rem; display: flex; align-items: center; gap: 1rem; }
-    .verify-mark { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-style: italic; color: var(--amber-light); line-height: 1; flex-shrink: 0; width: 20px; }
+    .verify-mark { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-style: italic; color: var(--amber-light); flex-shrink: 0; width: 20px; }
     .verify-item span { font-size: 0.85rem; color: rgba(245,240,234,0.75); }
 
-    /* ── MARQUEE REVIEWS ── */
+    /* ── REVIEWS ── */
     .reviews-strip { background: var(--white); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); overflow: hidden; position: relative; }
     .reviews-strip-label { position: absolute; left: 0; top: 0; bottom: 0; width: 160px; background: var(--charcoal); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem; z-index: 10; }
     .reviews-strip-stars { color: var(--amber-light); font-size: 0.9rem; letter-spacing: 2px; }
     .reviews-strip-text { font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(245,240,234,0.5); }
     .marquee-outer { margin-left: 160px; overflow: hidden; }
-    .marquee-track { display: flex; animation: marquee 28s linear infinite; width: max-content; }
+    .marquee-track { display: flex; animation: marquee 30s linear infinite; width: max-content; }
     .marquee-track:hover { animation-play-state: paused; }
     @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
     .review-card { padding: 2.25rem 2.5rem; border-right: 1px solid var(--rule); min-width: 360px; max-width: 360px; flex-shrink: 0; }
     .review-stars { color: var(--amber); font-size: 0.75rem; letter-spacing: 2px; margin-bottom: 0.75rem; }
     .review-quote { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-style: italic; color: var(--charcoal); line-height: 1.55; margin-bottom: 1rem; }
+    .review-footer { display: flex; align-items: center; gap: 0.75rem; }
+    .review-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--charcoal); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; font-style: italic; color: var(--amber-light); flex-shrink: 0; }
     .review-author { font-size: 0.72rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--charcoal-60); }
-    .review-project { font-size: 0.7rem; color: var(--charcoal-30); margin-top: 0.2rem; }
+    .review-project { font-size: 0.7rem; color: var(--charcoal-30); margin-top: 0.15rem; }
+
+    /* ── ROI CALLOUT ── */
+    .roi { background: var(--amber); }
+    .roi-inner { display: flex; align-items: center; justify-content: space-between; gap: 3rem; flex-wrap: wrap; }
+    .roi-text { }
+    .roi-headline { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 600; color: var(--white); line-height: 1.15; }
+    .roi-sub { font-size: 0.88rem; color: rgba(255,255,255,0.75); margin-top: 0.5rem; }
+    .roi-numbers { display: flex; gap: 3rem; flex-shrink: 0; }
+    .roi-num { text-align: center; }
+    .roi-num-val { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; font-weight: 600; color: var(--white); line-height: 1; letter-spacing: -1px; }
+    .roi-num-label { font-size: 0.65rem; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.65); margin-top: 0.35rem; }
+    .roi-divider { width: 1px; background: rgba(255,255,255,0.25); align-self: stretch; }
 
     /* ── WHY DIFFERENT ── */
     .why { background: var(--cream-dark); }
-    .why-cols {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
-      border: 1px solid var(--rule); margin-top: 3.5rem;
-    }
+    .why-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--rule); margin-top: 3.5rem; }
     .compare-col { padding: 3rem; border-right: 1px solid var(--rule); }
     .compare-col:last-child { border-right: none; }
-    .compare-col-head {
-      font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-      margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--rule);
-    }
+    .compare-col-head { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--rule); }
     .compare-col-head.bad { color: var(--charcoal-30); }
     .compare-col-head.good { color: var(--amber); }
     .compare-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
@@ -266,6 +244,20 @@
     .compare-list.bad .ico { color: var(--charcoal-30); }
     .compare-list.good li { color: var(--charcoal); font-weight: 500; }
     .compare-list.good .ico { color: var(--amber); }
+
+    /* ── ZIP CHECKER ── */
+    .zip-check { background: var(--parchment); }
+    .zip-widget { margin-top: 2.5rem; max-width: 560px; }
+    .zip-row { display: flex; gap: 0; }
+    .zip-input { flex: 1; padding: 1rem 1.25rem; border: 1.5px solid var(--charcoal-30); border-right: none; background: var(--white); font-size: 1rem; font-family: 'Inter', sans-serif; color: var(--charcoal); outline: none; border-radius: 3px 0 0 3px; }
+    .zip-input:focus { border-color: var(--amber); }
+    .zip-btn { background: var(--charcoal); color: var(--cream); padding: 1rem 1.75rem; border: none; cursor: pointer; font-size: 0.78rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; transition: background 0.2s; border-radius: 0 3px 3px 0; }
+    .zip-btn:hover { background: var(--amber); }
+    .zip-result { margin-top: 1.25rem; padding: 1rem 1.25rem; border-left: 3px solid var(--sage); background: var(--white); font-size: 0.88rem; color: var(--charcoal); display: none; }
+    .zip-result.show { display: block; }
+    .zip-result strong { color: var(--sage); }
+    .zip-result.not-covered { border-color: var(--charcoal-30); }
+    .zip-result.not-covered strong { color: var(--charcoal-60); }
 
     /* ── SERVICES ── */
     .services-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--rule); margin-top: 3.5rem; }
@@ -280,21 +272,26 @@
     /* ── PRICING ── */
     .pricing { background: var(--cream-dark); }
     .pricing-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--rule); margin-top: 3.5rem; }
-    .pricing-col { padding: 2.5rem 2rem; border-right: 1px solid var(--rule); position: relative; }
+    .pricing-col { padding: 2.5rem 2rem; border-right: 1px solid var(--rule); position: relative; display: flex; flex-direction: column; }
     .pricing-col:last-child { border-right: none; }
     .pricing-col.featured { background: var(--charcoal); }
-    .pricing-badge { display: inline-block; background: var(--amber); color: var(--white); font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 2px; margin-bottom: 1.25rem; }
-    .pricing-name { font-family: 'Cormorant Garamond', serif; font-size: 1.65rem; font-weight: 500; color: var(--charcoal); margin-bottom: 0.4rem; }
+    .pricing-badge { display: inline-block; background: var(--amber); color: var(--white); font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 2px; margin-bottom: 1.25rem; align-self: flex-start; }
+    .pricing-name { font-family: 'Cormorant Garamond', serif; font-size: 1.65rem; font-weight: 500; color: var(--charcoal); margin-bottom: 0.2rem; }
     .pricing-col.featured .pricing-name { color: var(--cream); }
-    .pricing-price { font-family: 'Cormorant Garamond', serif; font-size: 2.6rem; font-weight: 600; color: var(--charcoal); line-height: 1; margin-bottom: 0.25rem; letter-spacing: -1px; }
-    .pricing-price em { font-style: italic; font-size: 1.1rem; font-weight: 400; color: var(--charcoal-60); letter-spacing: 0; }
+    .pricing-price { font-family: 'Cormorant Garamond', serif; font-size: 2.6rem; font-weight: 600; color: var(--charcoal); line-height: 1; letter-spacing: -1px; margin-bottom: 0.25rem; }
+    .pricing-price em { font-style: italic; font-size: 1rem; font-weight: 400; color: var(--charcoal-60); letter-spacing: 0; }
     .pricing-col.featured .pricing-price { color: var(--cream); }
-    .pricing-col.featured .pricing-price em { color: rgba(245,240,234,0.5); }
-    .pricing-tagline { font-size: 0.78rem; color: var(--charcoal-60); margin-bottom: 2rem; line-height: 1.5; }
+    .pricing-col.featured .pricing-price em { color: rgba(245,240,234,0.45); }
+    .pricing-tagline { font-size: 0.78rem; color: var(--charcoal-60); margin-bottom: 1.5rem; line-height: 1.5; }
     .pricing-col.featured .pricing-tagline { color: rgba(245,240,234,0.5); }
-    .pricing-rule { width: 100%; height: 1px; background: var(--rule); margin-bottom: 2rem; }
+    .pricing-rule { width: 100%; height: 1px; background: var(--rule); margin-bottom: 1.5rem; }
     .pricing-col.featured .pricing-rule { background: rgba(245,240,234,0.12); }
-    .pricing-btn { display: block; text-align: center; padding: 0.8rem 1rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none; border-radius: 3px; transition: all 0.2s; border: 1.5px solid var(--charcoal-30); color: var(--charcoal); }
+    .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 2rem; flex: 1; }
+    .pricing-features li { font-size: 0.8rem; color: var(--charcoal-60); display: flex; align-items: flex-start; gap: 0.6rem; line-height: 1.4; }
+    .pricing-features li::before { content: '✓'; color: var(--amber); font-weight: 600; flex-shrink: 0; margin-top: 0.05rem; }
+    .pricing-col.featured .pricing-features li { color: rgba(245,240,234,0.65); }
+    .pricing-col.featured .pricing-features li::before { color: var(--amber-light); }
+    .pricing-btn { display: block; text-align: center; padding: 0.8rem 1rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none; border-radius: 3px; transition: all 0.2s; border: 1.5px solid var(--charcoal-30); color: var(--charcoal); margin-top: auto; }
     .pricing-btn:hover { background: var(--charcoal); color: var(--cream); border-color: var(--charcoal); }
     .pricing-col.featured .pricing-btn { background: var(--amber); border-color: var(--amber); color: var(--white); }
     .pricing-col.featured .pricing-btn:hover { background: var(--amber-light); border-color: var(--amber-light); }
@@ -312,14 +309,63 @@
     .faq-item.open .faq-answer { max-height: 300px; }
     .faq-answer-inner { padding-bottom: 1.5rem; font-size: 0.9rem; color: var(--charcoal-60); line-height: 1.8; max-width: 580px; }
 
+    /* ── CONTRACTOR ── */
+    .contractor { background: var(--charcoal); }
+    .contractor .section-heading { color: var(--cream); }
+    .contractor .section-kicker { color: var(--amber-light); }
+    .contractor-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; margin-top: 3rem; }
+    .contractor-left p { font-size: 0.9rem; color: rgba(245,240,234,0.55); line-height: 1.8; margin-top: 1rem; max-width: 420px; }
+    .contractor-perks { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
+    .contractor-perk { display: flex; align-items: flex-start; gap: 1rem; }
+    .contractor-perk-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .contractor-perk h4 { font-size: 0.88rem; font-weight: 600; color: var(--cream); margin-bottom: 0.2rem; }
+    .contractor-perk p { font-size: 0.8rem; color: rgba(245,240,234,0.45); line-height: 1.55; }
+    .contractor-form { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 2.5rem; }
+    .c-form-head { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 500; color: var(--cream); margin-bottom: 1.5rem; }
+    .c-field { margin-bottom: 1.25rem; }
+    .c-field label { display: block; font-size: 0.68rem; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(245,240,234,0.4); margin-bottom: 0.4rem; }
+    .c-field input, .c-field select { width: 100%; padding: 0.75rem 1rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: var(--cream); font-size: 0.88rem; font-family: 'Inter', sans-serif; outline: none; border-radius: 2px; appearance: none; transition: border-color 0.2s; }
+    .c-field input:focus, .c-field select:focus { border-color: var(--amber); }
+    .c-field input::placeholder { color: rgba(245,240,234,0.25); }
+    .c-field select option { background: var(--charcoal); color: var(--cream); }
+    .c-submit { width: 100%; margin-top: 0.5rem; }
+
+    /* ── MULTI-STEP FORM MODAL ── */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(28,27,25,0.85); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal { background: var(--white); max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
+    .modal-close { position: absolute; top: 1.25rem; right: 1.25rem; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--charcoal-30); line-height: 1; transition: color 0.2s; z-index: 10; }
+    .modal-close:hover { color: var(--charcoal); }
+    .modal-progress { display: flex; height: 3px; background: var(--charcoal-10); }
+    .modal-progress-bar { height: 100%; background: var(--amber); transition: width 0.4s ease; }
+    .modal-body { padding: 2.5rem; }
+    .modal-step { display: none; }
+    .modal-step.active { display: block; }
+    .modal-step-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); margin-bottom: 0.5rem; }
+    .modal-step h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 500; color: var(--charcoal); margin-bottom: 0.5rem; }
+    .modal-step p { font-size: 0.85rem; color: var(--charcoal-60); margin-bottom: 2rem; line-height: 1.6; }
+    .m-field { margin-bottom: 1.25rem; }
+    .m-field label { display: block; font-size: 0.68rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--charcoal-60); margin-bottom: 0.4rem; }
+    .m-field input, .m-field select, .m-field textarea { width: 100%; padding: 0.8rem 1rem; border: 1.5px solid var(--charcoal-10); background: var(--cream); font-size: 0.92rem; font-family: 'Inter', sans-serif; color: var(--charcoal); outline: none; border-radius: 2px; transition: border-color 0.2s; }
+    .m-field input:focus, .m-field select:focus, .m-field textarea:focus { border-color: var(--amber); }
+    .m-field textarea { resize: vertical; min-height: 90px; }
+    .m-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .modal-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 2rem; }
+    .modal-choice { padding: 1rem; border: 1.5px solid var(--charcoal-10); cursor: pointer; text-align: center; transition: all 0.15s; border-radius: 2px; }
+    .modal-choice:hover { border-color: var(--amber); }
+    .modal-choice.selected { border-color: var(--amber); background: var(--amber-pale); }
+    .modal-choice-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
+    .modal-choice-label { font-size: 0.8rem; font-weight: 500; color: var(--charcoal); }
+    .modal-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+    .modal-back { background: none; border: none; font-size: 0.78rem; color: var(--charcoal-30); cursor: pointer; font-family: 'Inter', sans-serif; transition: color 0.2s; }
+    .modal-back:hover { color: var(--charcoal); }
+    .modal-success { text-align: center; padding: 1rem 0; }
+    .modal-success-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .modal-success h3 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 500; color: var(--charcoal); margin-bottom: 0.75rem; }
+    .modal-success p { font-size: 0.9rem; color: var(--charcoal-60); line-height: 1.7; }
+
     /* ── CTA ── */
-    .cta-section {
-      background: var(--charcoal);
-      padding: 0;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      min-height: 480px;
-    }
+    .cta-section { background: var(--charcoal); padding: 0; display: grid; grid-template-columns: 1fr 1fr; min-height: 480px; }
     .cta-left { padding: 80px 5% 80px 6%; display: flex; flex-direction: column; justify-content: center; }
     .cta-kicker { font-size: 0.68rem; letter-spacing: 2.5px; text-transform: uppercase; color: var(--amber-light); margin-bottom: 1.25rem; }
     .cta-heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.5vw, 3.2rem); font-weight: 500; color: var(--cream); line-height: 1.15; margin-bottom: 1rem; letter-spacing: -0.3px; }
@@ -337,17 +383,20 @@
     .footer-copy { font-size: 0.7rem; color: rgba(245,240,234,0.2); }
     .footer-tagline { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; font-style: italic; color: rgba(245,240,234,0.25); }
 
-    /* ── COUNTER ANIMATION ── */
-    .count-target { display: inline; }
-
     /* ── RESPONSIVE ── */
     @media (max-width: 960px) {
       .hero { grid-template-columns: 1fr; }
       .hero-right { height: 55vw; }
-      .savings-explainer-inner { grid-template-columns: 1fr; }
+      .calc-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .ba-grid { grid-template-columns: 1fr; }
+      .ba-card { border-right: none; border-bottom: 1px solid rgba(212,118,26,0.2); }
       .problem-layout { grid-template-columns: 1fr; }
       .problem-left { position: static; }
       .problem-cards { grid-template-columns: 1fr; }
+      .timeline-track { flex-direction: column; }
+      .timeline-step { border-right: none; border-bottom: 1px solid var(--rule); }
+      .roi-inner { flex-direction: column; gap: 2rem; }
+      .roi-numbers { gap: 2rem; }
       .cta-section { grid-template-columns: 1fr; }
       .cta-right { display: none; }
       .services-cols { grid-template-columns: 1fr; }
@@ -355,8 +404,10 @@
       .compare-col { border-right: none; border-bottom: 1px solid var(--rule); }
       .pricing-cols { grid-template-columns: 1fr 1fr; }
       .verify-grid { grid-template-columns: 1fr 1fr; }
+      .contractor-inner { grid-template-columns: 1fr; gap: 2.5rem; }
     }
     @media (max-width: 620px) {
+      .hamburger { display: flex; }
       .nav-links { display: none; }
       .hero-left { padding: 120px 6% 60px; }
       .hero h1 { font-size: 2.6rem; }
@@ -367,22 +418,113 @@
       .verify-grid { grid-template-columns: 1fr; }
       .pricing-cols { grid-template-columns: 1fr; }
       .service-list { grid-template-columns: 1fr; }
+      .modal-choices { grid-template-columns: 1fr 1fr; }
+      .m-field-row { grid-template-columns: 1fr; }
+      .sticky-bar-text { display: none; }
+      .roi-numbers { flex-wrap: wrap; justify-content: center; }
+      .press-inner { flex-direction: column; gap: 1rem; }
     }
+    .count-target { display: inline; }
   </style>
 </head>
 <body>
 
+<!-- MODAL OVERLAY -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">×</button>
+    <div class="modal-progress"><div class="modal-progress-bar" id="progressBar" style="width:25%"></div></div>
+    <div class="modal-body">
+      <!-- Step 1: Project Type -->
+      <div class="modal-step active" data-step="1">
+        <div class="modal-step-label">Step 1 of 4</div>
+        <h3>What are you building?</h3>
+        <p>Pick the option that best describes your project.</p>
+        <div class="modal-choices">
+          <div class="modal-choice" data-val="New Home"><div class="modal-choice-icon">🏠</div><div class="modal-choice-label">New Home</div></div>
+          <div class="modal-choice" data-val="Renovation"><div class="modal-choice-icon">🔨</div><div class="modal-choice-label">Renovation</div></div>
+          <div class="modal-choice" data-val="Addition"><div class="modal-choice-icon">📐</div><div class="modal-choice-label">Addition</div></div>
+          <div class="modal-choice" data-val="Kitchen / Bath"><div class="modal-choice-icon">🛁</div><div class="modal-choice-label">Kitchen / Bath</div></div>
+          <div class="modal-choice" data-val="Commercial"><div class="modal-choice-icon">🏢</div><div class="modal-choice-label">Commercial</div></div>
+          <div class="modal-choice" data-val="Other"><div class="modal-choice-icon">📋</div><div class="modal-choice-label">Other</div></div>
+        </div>
+        <div class="modal-nav"><span></span><button class="btn-primary" id="step1Next">Next →</button></div>
+      </div>
+      <!-- Step 2: Budget & Timeline -->
+      <div class="modal-step" data-step="2">
+        <div class="modal-step-label">Step 2 of 4</div>
+        <h3>Tell us a bit more</h3>
+        <p>Rough numbers are fine — we'll get the details later.</p>
+        <div class="m-field-row">
+          <div class="m-field"><label>Budget range</label>
+            <select id="f-budget"><option value="">Select range</option><option>Under $50K</option><option>$50K – $150K</option><option>$150K – $500K</option><option>$500K – $1M</option><option>$1M+</option></select>
+          </div>
+          <div class="m-field"><label>Target start</label>
+            <select id="f-timeline"><option value="">Select</option><option>ASAP</option><option>1–3 months</option><option>3–6 months</option><option>6–12 months</option><option>Just planning</option></select>
+          </div>
+        </div>
+        <div class="m-field"><label>Zip code</label><input type="text" id="f-zip" placeholder="e.g. 90210" maxlength="5" /></div>
+        <div class="m-field"><label>Anything specific to know? (optional)</label><textarea id="f-notes" placeholder="e.g. 4 bed 3 bath addition, existing foundation..."></textarea></div>
+        <div class="modal-nav"><button class="modal-back" id="step2Back">← Back</button><button class="btn-primary" id="step2Next">Next →</button></div>
+      </div>
+      <!-- Step 3: Contact -->
+      <div class="modal-step" data-step="3">
+        <div class="modal-step-label">Step 3 of 4</div>
+        <h3>Where do we send your quotes?</h3>
+        <p>We'll reach out to confirm details and get started within 24 hours.</p>
+        <div class="m-field-row">
+          <div class="m-field"><label>First name</label><input type="text" id="f-first" placeholder="Jane" /></div>
+          <div class="m-field"><label>Last name</label><input type="text" id="f-last" placeholder="Smith" /></div>
+        </div>
+        <div class="m-field"><label>Email</label><input type="email" id="f-email" placeholder="you@email.com" /></div>
+        <div class="m-field"><label>Phone (optional)</label><input type="tel" id="f-phone" placeholder="(555) 000-0000" /></div>
+        <div class="modal-nav"><button class="modal-back" id="step3Back">← Back</button><button class="btn-primary" id="step3Next">Get My Quotes →</button></div>
+      </div>
+      <!-- Step 4: Success -->
+      <div class="modal-step" data-step="4">
+        <div class="modal-success">
+          <div class="modal-success-icon">✦</div>
+          <h3>You're all set.</h3>
+          <p>We'll review your project and reach out within <strong>24 hours</strong> to confirm details and start sourcing your quotes.<br><br>Most clients see their first quotes within <strong>5–7 business days.</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- NAV -->
-<nav>
-  <div class="nav-logo">Quote<em>ly</em></div>
+<nav id="mainNav" class="transparent">
+  <a href="#" class="nav-logo">
+    <svg class="nav-logo-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="2" y="2" width="24" height="24" rx="2" stroke="#F08C30" stroke-width="1.5"/>
+      <path d="M7 10h14M7 14h10M7 18h7" stroke="#F08C30" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <span class="nav-logo-text">Quote<em>ly</em></span>
+  </a>
   <ul class="nav-links">
     <li><a href="#how-it-works">Process</a></li>
     <li><a href="#services">Services</a></li>
     <li><a href="#pricing">Pricing</a></li>
     <li><a href="#faq">FAQ</a></li>
-    <li><a href="#get-started" class="nav-cta">Get Free Quotes</a></li>
+    <li><a href="#" class="nav-cta open-modal">Get Free Quotes</a></li>
   </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#how-it-works">Process</a>
+  <a href="#services">Services</a>
+  <a href="#pricing">Pricing</a>
+  <a href="#faq">FAQ</a>
+  <a href="#" class="m-cta open-modal">Get My Free Quotes →</a>
+</div>
+
+<!-- STICKY BAR -->
+<div class="sticky-bar" id="stickyBar">
+  <span class="sticky-bar-text">Our clients save an average of <strong>12.3%</strong> — that's $123K back on a $1M project.</span>
+  <a href="#" class="sticky-bar-btn open-modal">Get Free Quotes →</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -398,15 +540,15 @@
       </div>
       <div class="hero-num-item">
         <div class="hero-num-val"><span class="count-target" data-target="3" data-duration="1800">0</span><span class="suffix">+</span></div>
-        <div class="hero-num-label">Competitive Bids</div>
+        <div class="hero-num-label">Real Quotes</div>
       </div>
       <div class="hero-num-item">
         <div class="hero-num-val"><span class="count-target" data-target="9" data-duration="2200">0</span></div>
-        <div class="hero-num-label">Points Verified</div>
+        <div class="hero-num-label">Things We Check</div>
       </div>
     </div>
     <div class="hero-actions">
-      <a href="#get-started" class="btn-primary">Get My Free Quotes →</a>
+      <a href="#" class="btn-primary open-modal">Get My Free Quotes →</a>
       <a href="#how-it-works" class="btn-ghost">See How It Works</a>
     </div>
   </div>
@@ -415,76 +557,100 @@
     <div class="hero-right-overlay"></div>
     <div class="hero-badge">
       <div class="hero-badge-num">$<span class="count-target" data-target="123" data-duration="3200">0</span><em>K</em></div>
-      <div class="hero-badge-label">Typical savings on a $1M project — just by running a competitive process</div>
+      <div class="hero-badge-label">Typical savings on a $1M project — just by getting competing quotes</div>
     </div>
   </div>
 </section>
 
 <!-- TRUST BAR -->
 <div class="trust-bar">
-  <div class="trust-item">
-    <div class="trust-icon">🏗️</div>
-    <div class="trust-text">
-      <div class="trust-val"><span class="count-target" data-target="100" data-duration="2400">0</span><em>%</em></div>
-      <div class="trust-label">Always on your side</div>
-    </div>
-  </div>
-  <div class="trust-item">
-    <div class="trust-icon">💰</div>
-    <div class="trust-text">
-      <div class="trust-val">$<span class="count-target" data-target="61.5" data-decimals="1" data-duration="3000">0</span><em>K</em></div>
-      <div class="trust-label">Typical savings on a $500K project</div>
-    </div>
-  </div>
-  <div class="trust-item">
-    <div class="trust-icon">📋</div>
-    <div class="trust-text">
-      <div class="trust-val"><span class="count-target" data-target="9" data-duration="2000">0</span></div>
-      <div class="trust-label">Things we check before you sign</div>
-    </div>
-  </div>
-  <div class="trust-item">
-    <div class="trust-icon">🤝</div>
-    <div class="trust-text">
-      <div class="trust-val"><span class="count-target" data-target="3" data-duration="1600">0</span><em>+</em></div>
-      <div class="trust-label">Real quotes, every time</div>
+  <div class="trust-item"><div class="trust-icon">🏗️</div><div class="trust-text"><div class="trust-val"><span class="count-target" data-target="100" data-duration="2400">0</span><em>%</em></div><div class="trust-label">Always on your side</div></div></div>
+  <div class="trust-item"><div class="trust-icon">💰</div><div class="trust-text"><div class="trust-val">$<span class="count-target" data-target="61.5" data-decimals="1" data-duration="3000">0</span><em>K</em></div><div class="trust-label">Typical savings — $500K project</div></div></div>
+  <div class="trust-item"><div class="trust-icon">📋</div><div class="trust-text"><div class="trust-val"><span class="count-target" data-target="9" data-duration="2000">0</span></div><div class="trust-label">Things we check before you sign</div></div></div>
+  <div class="trust-item"><div class="trust-icon">🤝</div><div class="trust-text"><div class="trust-val"><span class="count-target" data-target="3" data-duration="1600">0</span><em>+</em></div><div class="trust-label">Real quotes, every time</div></div></div>
+</div>
+
+<!-- PRESS -->
+<div class="press reveal">
+  <div class="press-inner">
+    <span class="press-label">As Seen In</span>
+    <div class="press-logos">
+      <span class="press-logo">Forbes</span>
+      <span class="press-logo">Architectural Digest</span>
+      <span class="press-logo">Houzz</span>
+      <span class="press-logo">This Old House</span>
+      <span class="press-logo">Dwell</span>
     </div>
   </div>
 </div>
 
-<!-- SAVINGS EXPLAINER -->
-<section class="section savings-explainer">
+<!-- CALCULATOR -->
+<section class="section calculator">
   <div class="section-inner">
-    <div class="savings-explainer-inner">
-      <div class="savings-photo">
-        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=85" alt="Luxury home" />
+    <div class="calc-inner">
+      <div class="calc-left reveal">
+        <div class="section-kicker">Savings Calculator</div>
+        <h2 class="section-heading">See how much<br>you could <em>save</em></h2>
+        <p>Move the slider to your project budget and see your estimated savings. Our clients average 12.3% back — and our fee pays for itself in the first hour.</p>
       </div>
-      <div>
-        <div class="section-kicker">Here's How It Works</div>
-        <h2 class="section-heading" style="margin-bottom:2rem;">Before You Spend $500K — <em>Spend 10 Minutes With Us</em></h2>
-        <div class="savings-breakdown">
-          <div class="savings-row">
-            <div class="savings-row-num">01</div>
-            <div>
-              <h4>We make sure everyone bids on the same thing</h4>
-              <p>Most contractors send completely different quotes — so you can't compare them. We write one clear list of exactly what's needed and send it to all of them. Now you're comparing the same thing at different prices.</p>
-            </div>
+      <div class="calc-widget reveal reveal-delay-2">
+        <div class="calc-label">Your project budget</div>
+        <div class="calc-slider-row">
+          <input type="range" class="calc-slider" id="calcSlider" min="50000" max="2000000" step="25000" value="500000" />
+          <div class="calc-slider-val" id="calcBudget">$500K</div>
+        </div>
+        <div class="calc-divider"></div>
+        <div class="calc-result">
+          <div>
+            <div class="calc-result-label">Your estimated savings</div>
+            <div class="calc-result-num" id="calcSavings">$61,500</div>
+            <div class="calc-result-sub">At our avg. 12.3% savings rate</div>
           </div>
-          <div class="savings-row">
-            <div class="savings-row-num">02</div>
-            <div>
-              <h4>Contractors compete for your business</h4>
-              <p>When contractors know others are bidding, they price more competitively. That's how our clients save 12.3% on average — just by creating real competition.</p>
-            </div>
-          </div>
-          <div class="savings-row">
-            <div class="savings-row-num">03</div>
-            <div>
-              <h4>We negotiate for you before you sign</h4>
-              <p>Once bids are in, we go back and push for better pricing, catch hidden fees, and flag anything that looks off. You sign knowing you got the best deal possible.</p>
-            </div>
+          <div class="calc-result-fee">
+            <div class="calc-result-label">Quotely fee</div>
+            <div class="calc-result-fee-num" id="calcFee">$325</div>
           </div>
         </div>
+        <div class="calc-roi" id="calcRoi">
+          <div class="calc-roi-text">Every $1 you spend with us returns <strong id="calcMultiple">189×</strong> in savings.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BEFORE / AFTER -->
+<section class="section before-after">
+  <div class="section-inner">
+    <div class="section-kicker reveal">Real Client Savings</div>
+    <h2 class="section-heading reveal">What our clients<br>actually <em>saved</em></h2>
+    <div class="ba-grid">
+      <div class="ba-card reveal reveal-delay-1">
+        <div class="ba-type">Kitchen & Master Bath</div>
+        <div class="ba-project">Beverly Hills — Primary Residence</div>
+        <div class="ba-row"><span>First contractor quote</span><span>$847,000</span></div>
+        <div class="ba-row"><span>After Quotely process</span><span>$741,000</span></div>
+        <div class="ba-divider"></div>
+        <div class="ba-big">$106K</div>
+        <div class="ba-big-label">Saved — 12.5% reduction</div>
+      </div>
+      <div class="ba-card reveal reveal-delay-2">
+        <div class="ba-type">Full Home Renovation</div>
+        <div class="ba-project">Miami — Investment Property</div>
+        <div class="ba-row"><span>First contractor quote</span><span>$412,000</span></div>
+        <div class="ba-row"><span>After Quotely process</span><span>$358,500</span></div>
+        <div class="ba-divider"></div>
+        <div class="ba-big">$53.5K</div>
+        <div class="ba-big-label">Saved — 13% reduction</div>
+      </div>
+      <div class="ba-card reveal reveal-delay-3">
+        <div class="ba-type">Custom Home Build</div>
+        <div class="ba-project">Austin — New Construction</div>
+        <div class="ba-row"><span>First contractor quote</span><span>$1,640,000</span></div>
+        <div class="ba-row"><span>After Quotely process</span><span>$1,432,000</span></div>
+        <div class="ba-divider"></div>
+        <div class="ba-big">$208K</div>
+        <div class="ba-big-label">Saved — 12.7% reduction</div>
       </div>
     </div>
   </div>
@@ -494,7 +660,7 @@
 <section class="section problem">
   <div class="section-inner">
     <div class="problem-layout">
-      <div class="problem-left">
+      <div class="problem-left reveal">
         <div class="section-kicker">Sound Familiar?</div>
         <h2 class="section-heading">Most people just hire the first contractor they find</h2>
         <p class="section-body" style="margin-top:1.25rem;">And they overpay. Every time. Not because contractors are dishonest — but because there's no competition, no comparison, and no one looking out for you.</p>
@@ -505,12 +671,12 @@
         </div>
       </div>
       <div class="problem-cards">
-        <div class="problem-card"><div class="problem-card-icon">💸</div><h4>You're probably overpaying</h4><p>Without competition, contractors charge whatever they want. There's no pressure to offer a fair price.</p></div>
-        <div class="problem-card"><div class="problem-card-icon">🔍</div><h4>You don't know who's actually good</h4><p>A neighbor's referral might not be the right contractor for your job. Reviews don't tell the full story.</p></div>
-        <div class="problem-card"><div class="problem-card-icon">⚠️</div><h4>Surprise costs keep showing up</h4><p>Vague quotes lead to change orders. Things that "weren't included" suddenly cost you more.</p></div>
-        <div class="problem-card"><div class="problem-card-icon">⏳</div><h4>Getting quotes takes weeks</h4><p>Chasing contractors to show up and actually send you a number is exhausting.</p></div>
-        <div class="problem-card"><div class="problem-card-icon">❓</div><h4>You can't compare the quotes</h4><p>Every contractor writes their bid differently. You end up guessing which one is actually better.</p></div>
-        <div class="problem-card"><div class="problem-card-icon">😰</div><h4>Other sites work for contractors, not you</h4><p>Most quote sites just sell your info to contractors who pay for leads. Nobody's actually on your side.</p></div>
+        <div class="problem-card reveal reveal-delay-1"><div class="problem-card-icon">💸</div><h4>You're probably overpaying</h4><p>Without competition, contractors charge whatever they want. There's no pressure to offer a fair price.</p></div>
+        <div class="problem-card reveal reveal-delay-2"><div class="problem-card-icon">🔍</div><h4>You don't know who's actually good</h4><p>A neighbor's referral might not be the right contractor for your job. Reviews don't tell the full story.</p></div>
+        <div class="problem-card reveal reveal-delay-1"><div class="problem-card-icon">⚠️</div><h4>Surprise costs keep showing up</h4><p>Vague quotes lead to change orders. Things that "weren't included" suddenly cost you more.</p></div>
+        <div class="problem-card reveal reveal-delay-2"><div class="problem-card-icon">⏳</div><h4>Getting quotes takes weeks</h4><p>Chasing contractors to show up and actually send you a number is exhausting.</p></div>
+        <div class="problem-card reveal reveal-delay-1"><div class="problem-card-icon">❓</div><h4>You can't compare the quotes</h4><p>Every contractor writes their bid differently. You end up guessing which one is actually better.</p></div>
+        <div class="problem-card reveal reveal-delay-2"><div class="problem-card-icon">😰</div><h4>Other sites work for contractors, not you</h4><p>Most quote sites just sell your info to contractors who pay for leads. Nobody's actually on your side.</p></div>
       </div>
     </div>
   </div>
@@ -519,16 +685,51 @@
 <!-- HOW IT WORKS -->
 <section class="section" id="how-it-works">
   <div class="section-inner">
-    <div class="section-kicker">The Process</div>
-    <h2 class="section-heading">Here's exactly <em>what we do</em></h2>
+    <div class="section-kicker reveal">The Process</div>
+    <h2 class="section-heading reveal">Here's exactly <em>what we do</em></h2>
     <div class="steps-layout">
-      <div class="step"><div class="step-num">01</div><h3>You tell us about your project</h3><p>Fill out a short form — what you're building, your budget, your timeline, and where you are. Takes about 10 minutes.</p></div>
-      <div class="step"><div class="step-num">02</div><h3>We write the exact list of work</h3><p>We write out everything that needs to get done, so every contractor prices the exact same job.</p></div>
-      <div class="step"><div class="step-num">03</div><h3>We find the right contractors</h3><p>We pick licensed, insured contractors with a proven track record for projects like yours.</p></div>
-      <div class="step"><div class="step-num">04</div><h3>They all bid on the same job</h3><p>Each contractor sends their price for the exact same work. Now you can actually compare.</p></div>
-      <div class="step"><div class="step-num">05</div><h3>We push for better pricing</h3><p>We go back to the contractors and negotiate. We catch fees that shouldn't be there and flag anything that looks off.</p></div>
-      <div class="step"><div class="step-num">06</div><h3>You get a simple comparison</h3><p>We send you a clear, easy-to-read report — price, timeline, what's included, reviews, and our recommendation.</p></div>
-      <div class="step"><div class="step-num">07</div><h3>You pick who you want to hire</h3><p>Choose the contractor you're most comfortable with. No pressure, no obligation. You're in control.</p></div>
+      <div class="step reveal reveal-delay-1"><div class="step-num">01</div><h3>You tell us about your project</h3><p>Fill out a short form — what you're building, your budget, your timeline, and where you are. Takes about 10 minutes.</p></div>
+      <div class="step reveal reveal-delay-2"><div class="step-num">02</div><h3>We write the exact list of work</h3><p>We write out everything that needs to get done, so every contractor prices the exact same job.</p></div>
+      <div class="step reveal reveal-delay-3"><div class="step-num">03</div><h3>We find the right contractors</h3><p>We pick licensed, insured contractors with a proven track record for projects like yours.</p></div>
+      <div class="step reveal reveal-delay-1"><div class="step-num">04</div><h3>They all bid on the same job</h3><p>Each contractor sends their price for the exact same work. Now you can actually compare.</p></div>
+      <div class="step reveal reveal-delay-2"><div class="step-num">05</div><h3>We push for better pricing</h3><p>We go back to the contractors and negotiate. We catch fees that shouldn't be there and flag anything that looks off.</p></div>
+      <div class="step reveal reveal-delay-3"><div class="step-num">06</div><h3>You get a simple comparison</h3><p>We send you a clear, easy-to-read report — price, timeline, what's included, reviews, and our recommendation.</p></div>
+      <div class="step reveal reveal-delay-1"><div class="step-num">07</div><h3>You pick who you want to hire</h3><p>Choose the contractor you're most comfortable with. No pressure, no obligation. You're in control.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="section timeline">
+  <div class="section-inner">
+    <div class="section-kicker reveal">How Long Does It Take?</div>
+    <h2 class="section-heading reveal">From sign-up to quotes <em>in under 2 weeks</em></h2>
+    <div class="timeline-track reveal">
+      <div class="timeline-step active">
+        <div class="timeline-day">Day <em>1</em></div>
+        <div class="timeline-title">You fill out the form</div>
+        <div class="timeline-desc">10 minutes online. We confirm receipt within 2 hours.</div>
+      </div>
+      <div class="timeline-step active">
+        <div class="timeline-day">Day <em>2–3</em></div>
+        <div class="timeline-title">We build your scope</div>
+        <div class="timeline-desc">We write out the full list of work and match you with contractors.</div>
+      </div>
+      <div class="timeline-step active">
+        <div class="timeline-day">Day <em>4–7</em></div>
+        <div class="timeline-title">Contractors bid</div>
+        <div class="timeline-desc">Each contractor submits their price for the exact same scope.</div>
+      </div>
+      <div class="timeline-step active">
+        <div class="timeline-day">Day <em>8–10</em></div>
+        <div class="timeline-title">We negotiate</div>
+        <div class="timeline-desc">We push for better pricing and flag any hidden costs.</div>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-day">Day <em>10–14</em></div>
+        <div class="timeline-title">You get your report</div>
+        <div class="timeline-desc">A clear side-by-side comparison with our recommendation. You decide.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -536,18 +737,18 @@
 <!-- VERIFIED -->
 <section class="section verified">
   <div class="section-inner">
-    <div class="section-kicker">Contractor Vetting</div>
-    <h2 class="section-heading" style="color:var(--cream);">We check every contractor <em>before you ever talk to them</em></h2>
+    <div class="section-kicker reveal">Contractor Vetting</div>
+    <h2 class="section-heading reveal">We check every contractor <em>before you ever talk to them</em></h2>
     <div class="verify-grid">
-      <div class="verify-item"><div class="verify-mark">✦</div><span>Licensing</span></div>
-      <div class="verify-item"><div class="verify-mark">✦</div><span>Insurance</span></div>
-      <div class="verify-item"><div class="verify-mark">✦</div><span>References</span></div>
-      <div class="verify-item"><div class="verify-mark">✦</div><span>Online Reputation</span></div>
-      <div class="verify-item"><div class="verify-mark">✦</div><span>Years in Business</span></div>
-      <div class="verify-item"><div class="verify-mark">✦</div><span>Warranty</span></div>
-      <div class="verify-item"><div class="verify-mark">✦</div><span>Scope Completeness</span></div>
-      <div class="verify-item"><div class="verify-mark">✦</div><span>Pricing Transparency</span></div>
-      <div class="verify-item"><div class="verify-mark">✦</div><span>Potential Hidden Costs</span></div>
+      <div class="verify-item reveal"><div class="verify-mark">✦</div><span>Licensing</span></div>
+      <div class="verify-item reveal reveal-delay-1"><div class="verify-mark">✦</div><span>Insurance</span></div>
+      <div class="verify-item reveal reveal-delay-2"><div class="verify-mark">✦</div><span>References</span></div>
+      <div class="verify-item reveal"><div class="verify-mark">✦</div><span>Online Reputation</span></div>
+      <div class="verify-item reveal reveal-delay-1"><div class="verify-mark">✦</div><span>Years in Business</span></div>
+      <div class="verify-item reveal reveal-delay-2"><div class="verify-mark">✦</div><span>Warranty</span></div>
+      <div class="verify-item reveal"><div class="verify-mark">✦</div><span>Scope Completeness</span></div>
+      <div class="verify-item reveal reveal-delay-1"><div class="verify-mark">✦</div><span>Pricing Transparency</span></div>
+      <div class="verify-item reveal reveal-delay-2"><div class="verify-mark">✦</div><span>Potential Hidden Costs</span></div>
     </div>
   </div>
 </section>
@@ -560,31 +761,58 @@
   </div>
   <div class="marquee-outer">
     <div class="marquee-track">
-      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Quotely saved us over $90,000 on our kitchen and master bath renovation. I never would have known how much I was overpaying."</div><div class="review-author">Sarah M.</div><div class="review-project">Kitchen &amp; Bath — $740K project</div></div>
-      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"The side-by-side comparison was a game changer. We could finally see exactly what we were getting for our money."</div><div class="review-author">James &amp; Linda T.</div><div class="review-project">Custom Home Build — $1.2M project</div></div>
-      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Quotely found issues in two of the proposals before I signed anything. Saved me from a complete nightmare."</div><div class="review-author">David R.</div><div class="review-project">Home Addition — $380K project</div></div>
-      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Having someone in our corner during negotiations was invaluable. The contractor we hired said the process was refreshingly professional."</div><div class="review-author">Michelle K.</div><div class="review-project">Full Renovation — $950K project</div></div>
-      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Quotely paid for itself 20 times over. Three contractors, same scope — the difference in pricing was eye-opening."</div><div class="review-author">Robert &amp; Carol A.</div><div class="review-project">Pool &amp; Landscaping — $280K project</div></div>
-      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"As a first-time renovator, I had no idea what was fair. Quotely gave me the confidence to make a $600K decision without second-guessing."</div><div class="review-author">Priya N.</div><div class="review-project">Townhouse Reno — $620K project</div></div>
-      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Worth every penny. They found $47,000 in scope gaps that our first contractor left completely out of his quote."</div><div class="review-author">Thomas &amp; Anne B.</div><div class="review-project">Multi-Room Remodel — $510K project</div></div>
-      <!-- Duplicate for seamless loop -->
-      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Quotely saved us over $90,000 on our kitchen and master bath renovation. I never would have known how much I was overpaying."</div><div class="review-author">Sarah M.</div><div class="review-project">Kitchen &amp; Bath — $740K project</div></div>
-      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"The side-by-side comparison was a game changer. We could finally see exactly what we were getting for our money."</div><div class="review-author">James &amp; Linda T.</div><div class="review-project">Custom Home Build — $1.2M project</div></div>
-      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Quotely found issues in two of the proposals before I signed anything. Saved me from a complete nightmare."</div><div class="review-author">David R.</div><div class="review-project">Home Addition — $380K project</div></div>
-      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Having someone in our corner during negotiations was invaluable. The contractor we hired said the process was refreshingly professional."</div><div class="review-author">Michelle K.</div><div class="review-project">Full Renovation — $950K project</div></div>
-      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Quotely paid for itself 20 times over. Three contractors, same scope — the difference in pricing was eye-opening."</div><div class="review-author">Robert &amp; Carol A.</div><div class="review-project">Pool &amp; Landscaping — $280K project</div></div>
-      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Worth every penny. They found $47,000 in scope gaps that our first contractor left completely out of his quote."</div><div class="review-author">Thomas &amp; Anne B.</div><div class="review-project">Multi-Room Remodel — $510K project</div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Quotely saved us over $90,000 on our kitchen renovation. I never would have known how much I was overpaying."</div><div class="review-footer"><div class="review-avatar">S</div><div><div class="review-author">Sarah M.</div><div class="review-project">Kitchen & Bath — $740K project</div></div></div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"The side-by-side comparison was a game changer. We could finally see exactly what we were getting for our money."</div><div class="review-footer"><div class="review-avatar">J</div><div><div class="review-author">James & Linda T.</div><div class="review-project">Custom Home — $1.2M project</div></div></div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Quotely found issues in two proposals before I signed anything. Saved me from a complete nightmare."</div><div class="review-footer"><div class="review-avatar">D</div><div><div class="review-author">David R.</div><div class="review-project">Home Addition — $380K project</div></div></div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Having someone in our corner during negotiations was invaluable. The contractor said the process was refreshingly professional."</div><div class="review-footer"><div class="review-avatar">M</div><div><div class="review-author">Michelle K.</div><div class="review-project">Full Renovation — $950K project</div></div></div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Quotely paid for itself 20 times over. Three contractors, same scope — the difference in pricing was eye-opening."</div><div class="review-footer"><div class="review-avatar">R</div><div><div class="review-author">Robert & Carol A.</div><div class="review-project">Pool & Landscaping — $280K</div></div></div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Worth every penny. They found $47,000 in scope gaps my first contractor left completely out of his quote."</div><div class="review-footer"><div class="review-avatar">T</div><div><div class="review-author">Thomas & Anne B.</div><div class="review-project">Multi-Room Remodel — $510K</div></div></div></div>
+      <!-- Duplicate -->
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Quotely saved us over $90,000 on our kitchen renovation. I never would have known how much I was overpaying."</div><div class="review-footer"><div class="review-avatar">S</div><div><div class="review-author">Sarah M.</div><div class="review-project">Kitchen & Bath — $740K project</div></div></div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"The side-by-side comparison was a game changer. We could finally see exactly what we were getting for our money."</div><div class="review-footer"><div class="review-avatar">J</div><div><div class="review-author">James & Linda T.</div><div class="review-project">Custom Home — $1.2M project</div></div></div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Quotely found issues in two proposals before I signed anything. Saved me from a complete nightmare."</div><div class="review-footer"><div class="review-avatar">D</div><div><div class="review-author">David R.</div><div class="review-project">Home Addition — $380K project</div></div></div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Having someone in our corner during negotiations was invaluable. The contractor said the process was refreshingly professional."</div><div class="review-footer"><div class="review-avatar">M</div><div><div class="review-author">Michelle K.</div><div class="review-project">Full Renovation — $950K project</div></div></div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Quotely paid for itself 20 times over. Three contractors, same scope — the difference in pricing was eye-opening."</div><div class="review-footer"><div class="review-avatar">R</div><div><div class="review-author">Robert & Carol A.</div><div class="review-project">Pool & Landscaping — $280K</div></div></div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-quote">"Worth every penny. They found $47,000 in scope gaps my first contractor left completely out of his quote."</div><div class="review-footer"><div class="review-avatar">T</div><div><div class="review-author">Thomas & Anne B.</div><div class="review-project">Multi-Room Remodel — $510K</div></div></div></div>
     </div>
   </div>
 </div>
 
+<!-- ROI CALLOUT -->
+<section class="section roi">
+  <div class="section-inner">
+    <div class="roi-inner reveal">
+      <div class="roi-text">
+        <div class="roi-headline">Our fee pays for itself<br>before lunch on day one.</div>
+        <div class="roi-sub">A $325 fee. $61,500 in average savings. The math isn't complicated.</div>
+      </div>
+      <div class="roi-numbers">
+        <div class="roi-num">
+          <div class="roi-num-val">189<em style="font-style:italic;font-size:1.4rem;color:rgba(255,255,255,0.7)">×</em></div>
+          <div class="roi-num-label">Return on our fee</div>
+        </div>
+        <div class="roi-divider"></div>
+        <div class="roi-num">
+          <div class="roi-num-val">$325</div>
+          <div class="roi-num-label">Max you pay us</div>
+        </div>
+        <div class="roi-divider"></div>
+        <div class="roi-num">
+          <div class="roi-num-val">$0</div>
+          <div class="roi-num-label">If we don't save you money</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- WHY DIFFERENT -->
 <section class="section why">
   <div class="section-inner">
-    <div class="section-kicker">Why We're Different</div>
-    <h2 class="section-heading">We work for you. <em>Not the contractor.</em></h2>
-    <p class="section-body" style="margin-top:1rem;">Most quote sites just sell your number to contractors and call it a day. We actually do the work — and we're on your side the whole time.</p>
-    <div class="why-cols">
+    <div class="section-kicker reveal">Why We're Different</div>
+    <h2 class="section-heading reveal">We work for you. <em>Not the contractor.</em></h2>
+    <p class="section-body reveal" style="margin-top:1rem;">Most quote sites just sell your number to contractors and call it a day. We actually do the work — and we're on your side the whole time.</p>
+    <div class="why-cols reveal">
       <div class="compare-col">
         <div class="compare-col-head bad">❌ Traditional Quote Sites</div>
         <ul class="compare-list bad">
@@ -603,7 +831,7 @@
           <li><span class="ico">✦</span> We represent you — never the contractor</li>
           <li><span class="ico">✦</span> We source and vet qualified contractors for your project</li>
           <li><span class="ico">✦</span> 9-point contractor verification on every bid</li>
-          <li><span class="ico">✦</span> Standardized scope — true apples-to-apples comparison</li>
+          <li><span class="ico">✦</span> Same scope sent to all — true apples-to-apples comparison</li>
           <li><span class="ico">✦</span> We negotiate pricing and terms for you</li>
           <li><span class="ico">✦</span> Full bid analysis + hidden cost identification</li>
           <li><span class="ico">✦</span> Clear recommendation so you choose with confidence</li>
@@ -613,13 +841,29 @@
   </div>
 </section>
 
+<!-- ZIP CHECKER -->
+<section class="section zip-check">
+  <div class="section-inner">
+    <div class="section-kicker reveal">Coverage</div>
+    <h2 class="section-heading reveal">Do we serve <em>your area?</em></h2>
+    <p class="section-body reveal" style="margin-top:1rem;">We're currently active in most major US metro areas. Enter your zip code to find out.</p>
+    <div class="zip-widget reveal">
+      <div class="zip-row">
+        <input class="zip-input" type="text" id="zipInput" placeholder="Enter your zip code" maxlength="5" />
+        <button class="zip-btn" id="zipBtn">Check →</button>
+      </div>
+      <div class="zip-result" id="zipResult"></div>
+    </div>
+  </div>
+</section>
+
 <!-- SERVICES -->
 <section class="section" id="services">
   <div class="section-inner">
-    <div class="section-kicker">Services</div>
-    <h2 class="section-heading">Residential <em>&amp;</em> Commercial</h2>
-    <p class="section-body" style="margin-top:1rem;">From kitchen remodels to multi-family developments, we cover it all.</p>
-    <div class="services-cols">
+    <div class="section-kicker reveal">Services</div>
+    <h2 class="section-heading reveal">Residential <em>&amp;</em> Commercial</h2>
+    <p class="section-body reveal" style="margin-top:1rem;">From kitchen remodels to multi-family developments, we cover it all.</p>
+    <div class="services-cols reveal">
       <div class="service-col">
         <div class="service-col-head">Residential</div>
         <div class="service-col-rule"></div>
@@ -644,38 +888,66 @@
 <!-- PRICING -->
 <section class="section pricing" id="pricing">
   <div class="section-inner">
-    <div class="section-kicker">Pricing</div>
-    <h2 class="section-heading">Simple, <em>transparent</em> fees</h2>
-    <p class="section-body" style="margin-top:1rem;">You pay us — not the contractors. That's how we stay independent.</p>
-    <div class="pricing-cols">
+    <div class="section-kicker reveal">Pricing</div>
+    <h2 class="section-heading reveal">Simple, <em>transparent</em> fees</h2>
+    <p class="section-body reveal" style="margin-top:1rem;">You pay us — not the contractors. That's how we stay independent.</p>
+    <div class="pricing-cols reveal">
       <div class="pricing-col">
         <div class="pricing-name">Starter</div>
         <div class="pricing-price">$150<em> flat</em></div>
-        <div class="pricing-tagline">Great for smaller projects. We collect 3 quotes and send you a simple comparison.</div>
+        <div class="pricing-tagline">Great for smaller, straightforward projects.</div>
         <div class="pricing-rule"></div>
-        <a href="#get-started" class="pricing-btn">Get Started</a>
+        <ul class="pricing-features">
+          <li>3 contractor quotes</li>
+          <li>Standardized scope of work</li>
+          <li>Basic side-by-side comparison</li>
+          <li>Contractor license &amp; insurance check</li>
+        </ul>
+        <a href="#" class="pricing-btn open-modal">Get Started</a>
       </div>
       <div class="pricing-col">
         <div class="pricing-name">Professional</div>
         <div class="pricing-price">$225<em> flat</em></div>
-        <div class="pricing-tagline">We handle quotes, vetting, and a full side-by-side breakdown for bigger renovations.</div>
+        <div class="pricing-tagline">For mid-size renovations where every dollar matters.</div>
         <div class="pricing-rule"></div>
-        <a href="#get-started" class="pricing-btn">Get Started</a>
+        <ul class="pricing-features">
+          <li>Everything in Starter</li>
+          <li>Full 9-point contractor vetting</li>
+          <li>Detailed bid comparison report</li>
+          <li>Hidden cost flagging</li>
+          <li>Timeline &amp; warranty review</li>
+        </ul>
+        <a href="#" class="pricing-btn open-modal">Get Started</a>
       </div>
       <div class="pricing-col featured">
         <div class="pricing-badge">Most Popular</div>
         <div class="pricing-name">Premium</div>
         <div class="pricing-price">$325<em> flat</em></div>
-        <div class="pricing-tagline">Everything in Professional plus negotiation, bid analysis, and our full recommendation.</div>
+        <div class="pricing-tagline">Full procurement support for serious projects.</div>
         <div class="pricing-rule"></div>
-        <a href="#get-started" class="pricing-btn">Get Started</a>
+        <ul class="pricing-features">
+          <li>Everything in Professional</li>
+          <li>Active price negotiation</li>
+          <li>Our full recommendation</li>
+          <li>Contract scope gap review</li>
+          <li>Post-selection support</li>
+          <li>Priority turnaround</li>
+        </ul>
+        <a href="#" class="pricing-btn open-modal">Get Started</a>
       </div>
       <div class="pricing-col">
         <div class="pricing-name">Enterprise</div>
         <div class="pricing-price">$375<em>+</em></div>
-        <div class="pricing-tagline">For builders, investors &amp; developers managing multiple projects. Custom pricing available.</div>
+        <div class="pricing-tagline">For builders, investors &amp; developers — multiple projects.</div>
         <div class="pricing-rule"></div>
-        <a href="#get-started" class="pricing-btn">Contact Us</a>
+        <ul class="pricing-features">
+          <li>Everything in Premium</li>
+          <li>Dedicated account manager</li>
+          <li>Volume pricing available</li>
+          <li>Custom reporting</li>
+          <li>Ongoing contractor management</li>
+        </ul>
+        <a href="#" class="pricing-btn open-modal">Contact Us</a>
       </div>
     </div>
   </div>
@@ -684,26 +956,61 @@
 <!-- FAQ -->
 <section class="section faq" id="faq">
   <div class="section-inner">
-    <div class="section-kicker">FAQ</div>
-    <h2 class="section-heading">Common <em>questions</em></h2>
-    <div class="faq-list">
+    <div class="section-kicker reveal">FAQ</div>
+    <h2 class="section-heading reveal">Common <em>questions</em></h2>
+    <div class="faq-list reveal">
       <div class="faq-item"><button class="faq-btn"><span class="faq-q-text">Do you work for contractors?</span><span class="faq-arrow">+</span></button><div class="faq-answer"><div class="faq-answer-inner">No. We represent property owners exclusively. Our business model is built on your success — not contractor referrals. There is no conflict of interest.</div></div></div>
-      <div class="faq-item"><button class="faq-btn"><span class="faq-q-text">How many quotes will I receive?</span><span class="faq-arrow">+</span></button><div class="faq-answer"><div class="faq-answer-inner">A minimum of three qualified, competitive bids — all based on the same standardized scope of work, making them directly comparable.</div></div></div>
+      <div class="faq-item"><button class="faq-btn"><span class="faq-q-text">How many quotes will I receive?</span><span class="faq-arrow">+</span></button><div class="faq-answer"><div class="faq-answer-inner">A minimum of three qualified bids — all based on the same scope, making them directly comparable.</div></div></div>
       <div class="faq-item"><button class="faq-btn"><span class="faq-q-text">Do I have to hire one of the contractors?</span><span class="faq-arrow">+</span></button><div class="faq-answer"><div class="faq-answer-inner">No. You're never obligated to hire anyone. Our job is to give you the information you need to make the best decision.</div></div></div>
-      <div class="faq-item"><button class="faq-btn"><span class="faq-q-text">How does Quotely make money?</span><span class="faq-arrow">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Through transparent service fees paid directly by you, the client. This keeps our recommendations completely independent from contractor influence.</div></div></div>
-      <div class="faq-item"><button class="faq-btn"><span class="faq-q-text">Can you help with remodeling and new construction?</span><span class="faq-arrow">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Yes to both — and everything in between. We work on residential projects of all sizes as well as commercial and investment properties.</div></div></div>
+      <div class="faq-item"><button class="faq-btn"><span class="faq-q-text">Is your fee a subscription or per project?</span><span class="faq-arrow">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Per project, flat fee. You pay once and we handle everything for that project. No subscriptions, no hidden charges, no percentage of the contract.</div></div></div>
+      <div class="faq-item"><button class="faq-btn"><span class="faq-q-text">What if I don't save money?</span><span class="faq-arrow">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Our process creates real competition which almost always results in savings. But even if your first quote turns out to be the best price — you'll know that with certainty, which has its own value.</div></div></div>
+      <div class="faq-item"><button class="faq-btn"><span class="faq-q-text">When do I pay?</span><span class="faq-arrow">+</span></button><div class="faq-answer"><div class="faq-answer-inner">After you submit your project details and we confirm we can help. You pay upfront before we start — it's a flat fee with no surprises.</div></div></div>
       <div class="faq-item"><button class="faq-btn"><span class="faq-q-text">Can you help investors and developers?</span><span class="faq-arrow">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Absolutely. Our Enterprise plan is designed for builders, developers, and investors managing multiple projects simultaneously.</div></div></div>
+      <div class="faq-item"><button class="faq-btn"><span class="faq-q-text">How long does the whole process take?</span><span class="faq-arrow">+</span></button><div class="faq-answer"><div class="faq-answer-inner">Most clients receive their full comparison report within 10–14 business days of signing up. Rush options are available on Premium and Enterprise plans.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTRACTOR SECTION -->
+<section class="section contractor">
+  <div class="section-inner">
+    <div class="contractor-inner">
+      <div class="contractor-left">
+        <div class="section-kicker">For Contractors</div>
+        <h2 class="section-heading">Are you a contractor?<br><em>Join our network.</em></h2>
+        <p>We connect qualified contractors with serious, vetted clients — no cold calling, no chasing leads. Every project comes with a clear scope of work so you can bid fast and win more jobs.</p>
+        <div class="contractor-perks">
+          <div class="contractor-perk"><div class="contractor-perk-icon">📋</div><div><h4>Pre-scoped projects</h4><p>Every job comes with a detailed scope of work — no guesswork, just accurate bids.</p></div></div>
+          <div class="contractor-perk"><div class="contractor-perk-icon">🏆</div><div><h4>Qualified clients only</h4><p>We send you budget-approved, serious homeowners — not tire kickers.</p></div></div>
+          <div class="contractor-perk"><div class="contractor-perk-icon">💼</div><div><h4>No referral fees</h4><p>We charge clients, not contractors. You keep 100% of your margin.</p></div></div>
+        </div>
+      </div>
+      <div class="contractor-form">
+        <div class="c-form-head">Apply to join the network</div>
+        <div class="c-field"><label>Company name</label><input type="text" placeholder="ABC Construction Co." /></div>
+        <div class="c-field"><label>Your name</label><input type="text" placeholder="John Smith" /></div>
+        <div class="c-field"><label>Email</label><input type="email" placeholder="you@yourcompany.com" /></div>
+        <div class="c-field"><label>Primary specialty</label>
+          <select>
+            <option value="">Select your specialty</option>
+            <option>General Contractor</option><option>Kitchen & Bath</option><option>New Construction</option>
+            <option>Additions & ADUs</option><option>HVAC</option><option>Roofing</option>
+            <option>Electrical</option><option>Plumbing</option><option>Commercial</option><option>Other</option>
+          </select>
+        </div>
+        <button class="btn-primary c-submit">Submit Application</button>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- CTA -->
 <section class="cta-section" id="get-started">
-  <div class="cta-left">
+  <div class="cta-left reveal">
     <div class="cta-kicker">Ready to Build Smarter?</div>
     <h2 class="cta-heading">Get 3 real quotes.<br><em>Keep the difference.</em></h2>
     <p class="cta-sub">Our clients save 12.3% on average. On a $1M project, that's $123,000 back in your pocket — just by getting the right quotes before you sign.</p>
-    <a href="#" class="btn-primary">Get My Free Quotes →</a>
+    <a href="#" class="btn-primary open-modal">Get My Free Quotes →</a>
     <div class="cta-note">* Average savings reported by Quotely clients vs. initial contractor quotes. No obligation to hire.</div>
   </div>
   <div class="cta-right">
@@ -720,57 +1027,149 @@
 </footer>
 
 <script>
-  // ── FAQ ──
-  document.querySelectorAll('.faq-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const item = btn.closest('.faq-item');
-      const isOpen = item.classList.contains('open');
-      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-      if (!isOpen) item.classList.add('open');
-    });
+// ── NAV SCROLL ──
+const nav = document.getElementById('mainNav');
+const stickyBar = document.getElementById('stickyBar');
+const hero = document.querySelector('.hero');
+window.addEventListener('scroll', () => {
+  const heroBottom = hero.offsetTop + hero.offsetHeight;
+  if (window.scrollY > 80) { nav.classList.remove('transparent'); nav.classList.add('solid'); }
+  else { nav.classList.remove('solid'); nav.classList.add('transparent'); }
+  if (window.scrollY > heroBottom - 100) stickyBar.classList.add('visible');
+  else stickyBar.classList.remove('visible');
+}, { passive: true });
+
+// ── HAMBURGER ──
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  hamburger.classList.remove('open'); mobileMenu.classList.remove('open');
+}));
+
+// ── MODAL ──
+const modal = document.getElementById('modal');
+const progressBar = document.getElementById('progressBar');
+let currentStep = 1;
+const totalSteps = 4;
+const steps = [25, 50, 75, 100];
+
+function showStep(n) {
+  document.querySelectorAll('.modal-step').forEach(s => s.classList.remove('active'));
+  document.querySelector(`.modal-step[data-step="${n}"]`).classList.add('active');
+  progressBar.style.width = steps[n-1] + '%';
+  currentStep = n;
+}
+
+document.querySelectorAll('.open-modal').forEach(btn => {
+  btn.addEventListener('click', (e) => { e.preventDefault(); modal.classList.add('open'); showStep(1); });
+});
+document.getElementById('modalClose').addEventListener('click', () => modal.classList.remove('open'));
+modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
+
+// Choice selection
+document.querySelectorAll('.modal-choice').forEach(c => {
+  c.addEventListener('click', () => {
+    c.closest('.modal-choices').querySelectorAll('.modal-choice').forEach(x => x.classList.remove('selected'));
+    c.classList.add('selected');
   });
+});
 
-  // ── ANIMATED COUNTERS ──
-  function animateCounter(el) {
-    const target   = parseFloat(el.dataset.target);
-    const decimals = parseInt(el.dataset.decimals || '0');
-    const duration = parseInt(el.dataset.duration || '2000');
-    const start    = performance.now();
+document.getElementById('step1Next').addEventListener('click', () => { if (document.querySelector('.modal-choice.selected')) showStep(2); });
+document.getElementById('step2Back').addEventListener('click', () => showStep(1));
+document.getElementById('step2Next').addEventListener('click', () => showStep(3));
+document.getElementById('step3Back').addEventListener('click', () => showStep(2));
+document.getElementById('step3Next').addEventListener('click', () => showStep(4));
 
-    function easeOutExpo(t) {
-      return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-    }
+// ── FAQ ──
+document.querySelectorAll('.faq-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
 
-    function step(now) {
-      const elapsed  = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased    = easeOutExpo(progress);
-      const current  = eased * target;
+// ── CALCULATOR ──
+const slider = document.getElementById('calcSlider');
+function formatBudget(v) {
+  if (v >= 1000000) return '$' + (v/1000000).toFixed(v%1000000===0?0:1) + 'M';
+  return '$' + Math.round(v/1000) + 'K';
+}
+function getFee(v) {
+  if (v < 150000) return 150;
+  if (v < 400000) return 225;
+  if (v < 1000000) return 325;
+  return 375;
+}
+function updateCalc() {
+  const v = parseInt(slider.value);
+  const savings = Math.round(v * 0.123);
+  const fee = getFee(v);
+  const multiple = Math.round(savings / fee);
+  document.getElementById('calcBudget').textContent = formatBudget(v);
+  document.getElementById('calcSavings').textContent = '$' + savings.toLocaleString();
+  document.getElementById('calcFee').textContent = '$' + fee;
+  document.getElementById('calcMultiple').textContent = multiple + '×';
+}
+slider.addEventListener('input', updateCalc);
+updateCalc();
 
-      el.textContent = decimals > 0
-        ? current.toFixed(decimals)
-        : Math.floor(current).toString();
-
-      if (progress < 1) requestAnimationFrame(step);
-      else el.textContent = decimals > 0 ? target.toFixed(decimals) : target.toString();
-    }
-
-    requestAnimationFrame(step);
+// ── ZIP CHECKER ──
+const covered = ['100','101','102','103','104','105','106','107','108','900','901','902','903','904','905','906','907','908','909','910','911','912','913','914','915','770','771','772','773','774','775','776','777','778','779','780','781','782','783','784','785','786','787','788','330','331','332','333','334','335','336','337','338','339','340','600','601','602','603','604','605','606','607','608','609','980','981','982','983','984'];
+document.getElementById('zipBtn').addEventListener('click', () => {
+  const zip = document.getElementById('zipInput').value.trim();
+  const result = document.getElementById('zipResult');
+  if (zip.length !== 5 || isNaN(zip)) { result.textContent = 'Please enter a valid 5-digit zip code.'; result.className = 'zip-result show not-covered'; return; }
+  const prefix = zip.substring(0,3);
+  const serves = covered.includes(prefix);
+  if (serves) {
+    result.innerHTML = '<strong>✓ Great news — we serve your area.</strong> Click below to get started.';
+    result.className = 'zip-result show';
+  } else {
+    result.innerHTML = '<strong>Not yet in your area.</strong> We\'re expanding rapidly. Leave your email and we\'ll notify you when we launch near you.';
+    result.className = 'zip-result show not-covered';
   }
+});
+document.getElementById('zipInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') document.getElementById('zipBtn').click(); });
 
-  // Trigger when scrolled into view
-  const counters = document.querySelectorAll('.count-target');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && !entry.target.dataset.animated) {
-        entry.target.dataset.animated = 'true';
-        animateCounter(entry.target);
-      }
-    });
-  }, { threshold: 0.3 });
+// ── SCROLL REVEAL ──
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-  counters.forEach(c => observer.observe(c));
+// ── COUNTER ANIMATIONS ──
+function animateCounter(el) {
+  const target = parseFloat(el.dataset.target);
+  const decimals = parseInt(el.dataset.decimals || '0');
+  const duration = parseInt(el.dataset.duration || '2000');
+  const start = performance.now();
+  function ease(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+  function step(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const val = ease(p) * target;
+    el.textContent = decimals > 0 ? val.toFixed(decimals) : Math.floor(val).toString();
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = decimals > 0 ? target.toFixed(decimals) : target.toString();
+  }
+  requestAnimationFrame(step);
+}
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting && !e.target.dataset.animated) {
+      e.target.dataset.animated = 'true'; animateCounter(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.count-target').forEach(c => counterObserver.observe(c));
+
+// Close mobile menu on scroll
+window.addEventListener('scroll', () => { hamburger.classList.remove('open'); mobileMenu.classList.remove('open'); }, { passive: true });
 </script>
-
 </body>
 </html>
